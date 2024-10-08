@@ -1,5 +1,7 @@
 package org.sopt.week1;
 
+import org.sopt.week1.Main.UI.InvalidInputException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,5 +30,21 @@ public class DiaryRepository {
         }
 
         return diaryList;
+    }
+
+    public void patch(Long id, String body) {
+        validateIdExists(id);
+        storage.put(id, body);
+    }
+
+    public void delete(Long id) {
+        validateIdExists(id);
+        storage.remove(id);
+    }
+
+    private void validateIdExists(Long id) {
+        if (storage.get(id) == null) {
+            throw new InvalidInputException("존재하지 않는 id 값입니다.");
+        }
     }
 }

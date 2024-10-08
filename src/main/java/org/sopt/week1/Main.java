@@ -22,9 +22,15 @@ public class Main {
         void runRepeatedly() throws IOException;
 
         class UIException extends RuntimeException {
+            public UIException(String message) {
+                super(message);
+            }
         }
 
         class InvalidInputException extends UIException {
+            public InvalidInputException(String message) {
+                super(message);
+            }
         }
     }
 
@@ -50,7 +56,7 @@ public class Main {
                 try {
                     run();
                 } catch (InvalidInputException e) {
-                    ConsoleIO.printLine("잘못된 값을 입력하였습니다.");
+                    ConsoleIO.printLine(e.getMessage());
                 }
 
                 if (isFinished()) {
@@ -64,7 +70,7 @@ public class Main {
 
         private void run() throws IOException {
             switch (server.getStatus()) {
-                case READY, FINISHED, ERROR -> throw new UIException();
+                case READY, FINISHED, ERROR -> throw new UIException("유효하지 않은 상태입니다.");
 
                 case RUNNING -> {
                     switch (selected) {
@@ -84,12 +90,6 @@ public class Main {
                             server.post(input);
                         }
 
-                        case "DELETE" -> {
-                            ConsoleIO.printLine("삭제할 id 를 입력하세요!");
-                            final String input = ConsoleIO.readLine();
-//                            server.delete(input);
-                        }
-
                         case "PATCH" -> {
                             ConsoleIO.printLine("수정할 id 를 입력하세요!");
                             final String inputId = ConsoleIO.readLine();
@@ -97,7 +97,13 @@ public class Main {
                             ConsoleIO.printLine("수정 body 를 입력하세요!");
                             final String inputBody = ConsoleIO.readLine();
 
-//                            server.patch(inputId, inputBody);
+                            server.patch(inputId, inputBody);
+                        }
+
+                        case "DELETE" -> {
+                            ConsoleIO.printLine("삭제할 id 를 입력하세요!");
+                            final String input = ConsoleIO.readLine();
+                            server.delete(input);
                         }
 
                         case "FINISH" -> {
@@ -105,7 +111,7 @@ public class Main {
                         }
 
                         default -> {
-                            throw new InvalidInputException();
+                            throw new InvalidInputException("잘못된 값을 입력하였습니다.");
                         }
                     }
                 }
