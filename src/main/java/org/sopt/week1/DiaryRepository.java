@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class DiaryRepository {
     private final Map<Long, String> storage = new ConcurrentHashMap<>();
+    private final Map<Long, String> trash = new ConcurrentHashMap<>();
     private final AtomicLong numbering = new AtomicLong();
 
     void save(final Diary diary) {
@@ -32,15 +33,38 @@ public class DiaryRepository {
         return diaryList;
     }
 
+    public List<Diary> findAllInTrash() {
+        List<Diary> trashList = new ArrayList<>();
+
+        // trash의 각 항목을 돌면서 리스트에 추가함
+        for (Map.Entry<Long, String> entry : trash.entrySet()) {
+            Long id = entry.getKey();
+            String body = entry.getValue();
+            trashList.add(Diary.of(id, body));
+        }
+
+        return trashList;
+    }
+
     public void patch(Long id, String body) {
         storage.put(id, body);
     }
 
     public void delete(Long id) {
+        trash.put(id, storage.get(id));
         storage.remove(id);
+    }
+
+    public void restore(Long id) {
+        storage.put(id, trash.get(id));
+        trash.remove(id);
     }
 
     public boolean existsById(Long id) {
         return storage.containsKey(id);
+    }
+
+    public boolean existsInTrashById(Long id) {
+        return trash.containsKey(id);
     }
 }

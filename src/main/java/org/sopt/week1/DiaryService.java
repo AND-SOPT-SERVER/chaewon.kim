@@ -26,6 +26,15 @@ public class DiaryService {
         diaryRepository.delete(id);
     }
 
+    public List<Diary> getTrashList() {
+        return diaryRepository.findAllInTrash();
+    }
+
+    public void restoreDiary(Long id) {
+        validateExist(id);
+        diaryRepository.restore(id);
+    }
+
     private void validateExist(Long id) {
         if(!diaryRepository.existsById(id)) {
             throw new InvalidInputException("존재하지 않는 id 값입니다.");
