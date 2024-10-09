@@ -42,9 +42,7 @@ public class DiaryRepository {
         storage.remove(id);
     }
 
-    private void validateIdExists(Long id) {
-        if (storage.get(id) == null) {
-            throw new InvalidInputException("존재하지 않는 id 값입니다.");
-        }
+    public boolean existsById(Long id) {
+        return storage.containsKey(id);
     }
 }
