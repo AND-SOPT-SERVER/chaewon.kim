@@ -31,12 +31,18 @@ public class DiaryService {
     }
 
     public void restoreDiary(Long id) {
-        validateExist(id);
+        validateExistInTrash(id);
         diaryRepository.restore(id);
     }
 
     private void validateExist(Long id) {
         if(!diaryRepository.existsById(id)) {
+            throw new InvalidInputException("존재하지 않는 id 값입니다.");
+        }
+    }
+
+    private void validateExistInTrash(Long id) {
+        if(!diaryRepository.existsInTrashById(id)) {
             throw new InvalidInputException("존재하지 않는 id 값입니다.");
         }
     }
