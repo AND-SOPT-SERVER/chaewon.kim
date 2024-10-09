@@ -32,6 +32,12 @@ public class Main {
                 super(message);
             }
         }
+
+        class LimitExceededException extends UIException {
+            public LimitExceededException(String message) {
+                super(message);
+            }
+        }
     }
 
     static class DiaryUI implements UI {
@@ -55,7 +61,7 @@ public class Main {
 
                 try {
                     run();
-                } catch (InvalidInputException e) {
+                } catch (InvalidInputException | LimitExceededException e) {
                     ConsoleIO.printLine(e.getMessage());
                 }
 
