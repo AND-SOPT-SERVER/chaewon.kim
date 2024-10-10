@@ -33,12 +33,10 @@ public class DiaryRepository {
     }
 
     public void patch(Long id, String body) {
-        validateIdExists(id);
         storage.put(id, body);
     }
 
     public void delete(Long id) {
-        validateIdExists(id);
         storage.remove(id);
     }
 
