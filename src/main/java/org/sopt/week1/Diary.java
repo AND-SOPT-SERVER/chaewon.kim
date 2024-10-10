@@ -1,13 +1,18 @@
 package org.sopt.week1;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Diary {
+public class Diary implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private String body;
     private LocalDate updatedAt;
     private int patchCount;
+
+    public Diary() {
+    }
 
     private Diary(Long id, String body) {
         this.id = id;

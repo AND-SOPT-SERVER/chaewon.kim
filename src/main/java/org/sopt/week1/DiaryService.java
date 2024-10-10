@@ -11,8 +11,7 @@ public class DiaryService {
     private final DiaryRepository diaryRepository = new DiaryRepository();
 
     void postDiary(String body) {
-        final Diary diary = Diary.of(null, body);
-        diaryRepository.save(diary);
+        diaryRepository.save(body);
     }
 
     List<Diary> getDiaryList() {
