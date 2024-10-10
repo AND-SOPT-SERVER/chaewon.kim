@@ -32,6 +32,12 @@ public class Main {
                 super(message);
             }
         }
+
+        class LimitExceededException extends UIException {
+            public LimitExceededException(String message) {
+                super(message);
+            }
+        }
     }
 
     static class DiaryUI implements UI {
@@ -55,7 +61,7 @@ public class Main {
 
                 try {
                     run();
-                } catch (InvalidInputException e) {
+                } catch (InvalidInputException | LimitExceededException e) {
                     ConsoleIO.printLine(e.getMessage());
                 }
 
@@ -106,6 +112,20 @@ public class Main {
                             server.delete(input);
                         }
 
+                        case "RESTORE" -> {
+                            ConsoleIO.printLine("삭제된 일기 목록");
+                            server.getTrashList().forEach(diary -> {
+                                try {
+                                    ConsoleIO.printLine(diary.getId() + " : " + diary.getBody());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                            ConsoleIO.printLine("복구하고 싶은 일기의 id를 입력하세요!");
+                            final String input = ConsoleIO.readLine();
+                            server.restore(input);
+                        }
+
                         case "FINISH" -> {
                             server.finish();
                         }
@@ -138,6 +158,7 @@ public class Main {
                     - POST : 일기 작성하기
                     - DELETE : 일기 제거하기
                     - PATCH : 일기 수정하기
+                    - RESTORE : 삭제된 일기 복구하기
                     """;
         }
 

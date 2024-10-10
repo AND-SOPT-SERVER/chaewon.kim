@@ -41,6 +41,15 @@ public class DiaryController {
         diaryService.deleteDiary(Long.parseLong(id));
     }
 
+    final List<Diary> getTrashList() {
+        return diaryService.getTrashList();
+    }
+
+    final void restore(final String id) {
+        validateType(id);
+        diaryService.restoreDiary(Long.parseLong(id));
+    }
+
     private void validateBody(String body) {
         if (body.length() > 30) {
             throw new InvalidInputException("일기 글자수는 30글자를 넘을 수 없습니다.");
