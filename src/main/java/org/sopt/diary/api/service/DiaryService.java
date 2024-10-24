@@ -51,8 +51,6 @@ public class DiaryService {
     // 일기 삭제
     @Transactional
     public void deleteDiary(final Long diaryId) {
-//        DiaryEntity diaryEntity = findDiaryById(diaryId);
-//        diaryRepository.delete(diaryEntity);
         diaryRepository.deleteById(diaryId);
     }
 
@@ -61,31 +59,4 @@ public class DiaryService {
                 () -> new IllegalArgumentException("해당 다이어리를 찾을 수 없습니다.")
         );
     }
-
-//    public void createDiary() {
-//        diaryRepository.save(new DiaryEntity("채워니", "후하후하"));
-//    }
-//
-//    public List<Diary> getList() {
-//        // (1) repository로부터 DiaryEntity를 가져옴
-//        final List<DiaryEntity> diaryEntities = diaryRepository.findAll();
-//
-//        // (2) DiaryEntity를 Diary로 변환해주는 작업
-//        final List<Diary> diaryList = new ArrayList<>();
-//
-//        for(DiaryEntity diaryEntity : diaryEntities) {
-//            diaryList.add(
-//                    new Diary(diaryEntity.getId(), diaryEntity.getTitle())
-//            );
-//        }
-//
-//        return new ArrayList<>();
-//    }
-//
-//    public Diary getDiaryById(Long id) {
-//        DiaryEntity diaryEntity = diaryRepository.findById(id)
-//                .orElseThrow();
-//
-//        return new Diary(diaryEntity.getId(), diaryEntity.getTitle());
-//    }
 }
