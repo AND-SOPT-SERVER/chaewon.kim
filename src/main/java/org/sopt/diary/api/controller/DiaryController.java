@@ -5,13 +5,9 @@ import org.sopt.diary.api.dto.request.DiaryUpdateDto;
 import org.sopt.diary.api.dto.response.DiaryDetailResponse;
 import org.sopt.diary.api.dto.response.DiaryListResponse;
 import org.sopt.diary.api.dto.response.DiaryResponse;
-import org.sopt.diary.api.service.Diary;
 import org.sopt.diary.api.service.DiaryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/luckybicky")
@@ -56,7 +52,7 @@ public class DiaryController {
 
     // 일기 삭제
     @DeleteMapping("/diaries/{diaryId}")
-    public ResponseEntity<DiaryResponse> deleteDiary(
+    public ResponseEntity<Void> deleteDiary(
             @PathVariable final Long diaryId
     ) {
         diaryService.deleteDiary(diaryId);
