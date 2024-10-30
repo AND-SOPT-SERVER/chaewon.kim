@@ -1,5 +1,6 @@
 package org.sopt.diary.api.controller;
 
+import jakarta.validation.Valid;
 import org.sopt.diary.api.dto.request.DiaryCreateDto;
 import org.sopt.diary.api.dto.request.DiaryUpdateDto;
 import org.sopt.diary.api.dto.response.DiaryDetailResponse;
@@ -21,7 +22,7 @@ public class DiaryController {
     // 일기 작성
     @PostMapping("/diaries")
     public ResponseEntity<DiaryResponse> createDiary(
-            @RequestBody final DiaryCreateDto diaryCreateDto
+            @Valid @RequestBody final DiaryCreateDto diaryCreateDto
     ) {
         return ResponseEntity.ok(diaryService.createDiary(diaryCreateDto));
     }
@@ -44,7 +45,7 @@ public class DiaryController {
     @PatchMapping("/diaries/{diaryId}")
     public ResponseEntity<Void> updateDiary(
             @PathVariable final Long diaryId,
-            @RequestBody final DiaryUpdateDto diaryUpdateDto
+            @Valid @RequestBody final DiaryUpdateDto diaryUpdateDto
     ) {
         diaryService.updateDiary(diaryId, diaryUpdateDto);
         return ResponseEntity.ok().build();
