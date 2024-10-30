@@ -3,7 +3,7 @@ package org.sopt.diary.domain;
 import jakarta.persistence.*;
 
 @Entity
-public class SoptMember {
+public class SoptMember extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class SoptMember {
     @Column(nullable = false)
     private int age;
 
-    public SoptMember() {};
+    protected SoptMember() {};
 
     public SoptMember(String nickname, String password, String name, int age) {
         this.nickname = nickname;
