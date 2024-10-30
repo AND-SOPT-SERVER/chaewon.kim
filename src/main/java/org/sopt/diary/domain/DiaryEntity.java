@@ -12,16 +12,20 @@ public class DiaryEntity {
     private Long id;
 
     @Column(nullable = false)
-    public String title;
+    private String title;
 
     @Column(nullable = false)
-    public String content;
+    private String content;
 
     @Column
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @Column
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private SoptMember soptMember;
 
     public DiaryEntity() {
 
