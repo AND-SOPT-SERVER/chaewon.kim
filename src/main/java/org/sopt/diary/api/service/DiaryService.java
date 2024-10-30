@@ -5,6 +5,8 @@ import org.sopt.diary.api.dto.request.DiaryUpdateDto;
 import org.sopt.diary.api.dto.response.DiaryDetailResponse;
 import org.sopt.diary.api.dto.response.DiaryListResponse;
 import org.sopt.diary.api.dto.response.DiaryResponse;
+import org.sopt.diary.common.exception.ErrorCode;
+import org.sopt.diary.common.exception.NotFoundException;
 import org.sopt.diary.domain.DiaryEntity;
 import org.sopt.diary.domain.repository.DiaryRepository;
 import org.springframework.stereotype.Component;
@@ -51,12 +53,13 @@ public class DiaryService {
     // 일기 삭제
     @Transactional
     public void deleteDiary(final Long diaryId) {
+        findDiaryById(diaryId);
         diaryRepository.deleteById(diaryId);
     }
 
     private DiaryEntity findDiaryById(final Long diaryId) {
         return diaryRepository.findById(diaryId).orElseThrow(
-                () -> new IllegalArgumentException("해당 다이어리를 찾을 수 없습니다.")
+                () -> new NotFoundException(ErrorCode.DIARY_NOT_FOUND)
         );
     }
 }
