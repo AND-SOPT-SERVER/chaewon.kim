@@ -1,6 +1,7 @@
 package org.sopt.diary.api.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.sopt.diary.api.dto.request.DiaryCreateDto;
 import org.sopt.diary.api.dto.request.DiaryUpdateDto;
 import org.sopt.diary.api.dto.response.DiaryDetailResponse;
@@ -30,7 +31,7 @@ public class DiaryController {
     // 일기 상세 조회
     @GetMapping("/diaries/{diaryId}")
     public ResponseEntity<DiaryDetailResponse> getDiary(
-            @PathVariable final Long diaryId
+            @PathVariable @Min(value = 1L, message = "diaryId는 양수여야 합니다.") final Long diaryId
     ) {
         return ResponseEntity.ok(diaryService.getDiary(diaryId));
     }
@@ -44,7 +45,7 @@ public class DiaryController {
     // 일기 수정
     @PatchMapping("/diaries/{diaryId}")
     public ResponseEntity<Void> updateDiary(
-            @PathVariable final Long diaryId,
+            @PathVariable @Min(value = 1L, message = "diaryId는 양수여야 합니다.") final Long diaryId,
             @Valid @RequestBody final DiaryUpdateDto diaryUpdateDto
     ) {
         diaryService.updateDiary(diaryId, diaryUpdateDto);
@@ -54,7 +55,7 @@ public class DiaryController {
     // 일기 삭제
     @DeleteMapping("/diaries/{diaryId}")
     public ResponseEntity<Void> deleteDiary(
-            @PathVariable final Long diaryId
+            @PathVariable @Min(value = 1L, message = "diaryId는 양수여야 합니다.") final Long diaryId
     ) {
         diaryService.deleteDiary(diaryId);
         return ResponseEntity.ok().build();
