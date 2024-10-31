@@ -1,13 +1,13 @@
 package org.sopt.diary.api.service;
 
-import org.sopt.diary.api.dto.request.Diary.DiaryCreateDto;
-import org.sopt.diary.api.dto.request.Diary.DiaryUpdateDto;
 import org.sopt.diary.api.dto.response.Diary.DiaryDetailResponse;
 import org.sopt.diary.api.dto.response.Diary.DiaryListResponse;
 import org.sopt.diary.api.dto.response.Diary.DiaryResponse;
 import org.sopt.diary.common.exception.DiaryErrorCode;
 import org.sopt.diary.common.exception.BusinessException;
+import org.sopt.diary.domain.Category;
 import org.sopt.diary.domain.DiaryEntity;
+import org.sopt.diary.domain.SoptMember;
 import org.sopt.diary.domain.repository.DiaryRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +17,18 @@ import java.util.List;
 @Component
 public class DiaryService {
     private final DiaryRepository diaryRepository;
+    private final MemberService memberService;
 
-    public DiaryService(DiaryRepository diaryRepository) {
+    public DiaryService(DiaryRepository diaryRepository, MemberService memberService) {
         this.diaryRepository = diaryRepository;
+        this.memberService = memberService;
     }
 
     // 일기 작성
     @Transactional
-    public DiaryResponse createDiary(final DiaryCreateDto diaryCreateDto) {
-        DiaryEntity diaryEntity = new DiaryEntity(diaryCreateDto.getTitle(), diaryCreateDto.getContent());
+    public DiaryResponse createDiary(final Long memberId, final String title, final String content, final String category, final boolean isPublic) {
+        SoptMember member = memberService.findById(memberId);
+        DiaryEntity diaryEntity = new DiaryEntity(title, content, Category.fromName(category), isPublic, member);
         return DiaryResponse.from(diaryRepository.save(diaryEntity));
     }
 
@@ -45,9 +48,9 @@ public class DiaryService {
 
     // 일기 수정
     @Transactional
-    public void updateDiary(final Long diaryId, final DiaryUpdateDto diaryUpdateDto) {
+    public void updateDiary(final Long diaryId, final String title, final String content) {
         DiaryEntity diaryEntity = findDiaryById(diaryId);
-        diaryEntity.updateDiary(diaryUpdateDto.getTitle(), diaryUpdateDto.getContent());
+        diaryEntity.updateDiary(title, content);
     }
 
     // 일기 삭제

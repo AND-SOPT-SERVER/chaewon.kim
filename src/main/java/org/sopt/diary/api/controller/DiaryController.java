@@ -25,9 +25,20 @@ public class DiaryController {
     // 일기 작성
     @PostMapping("/diaries")
     public ResponseEntity<ResponseDto<DiaryResponse>> createDiary(
+            @RequestHeader("Member-Id") Long memberId,
             @Valid @RequestBody final DiaryCreateDto diaryCreateDto
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success(diaryService.createDiary(diaryCreateDto)));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.success(
+                                diaryService.createDiary(
+                                        memberId,
+                                        diaryCreateDto.getTitle(),
+                                        diaryCreateDto.getContent(),
+                                        diaryCreateDto.getCategory(),
+                                        diaryCreateDto.isPublic()
+                                )
+                        )
+                );
     }
 
     // 일기 상세 조회
@@ -50,7 +61,7 @@ public class DiaryController {
             @PathVariable @Min(value = 1L, message = "diaryId는 양수여야 합니다.") final Long diaryId,
             @Valid @RequestBody final DiaryUpdateDto diaryUpdateDto
     ) {
-        diaryService.updateDiary(diaryId, diaryUpdateDto);
+        diaryService.updateDiary(diaryId, diaryUpdateDto.getTitle(), diaryUpdateDto.getContent());
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success());
     }
 

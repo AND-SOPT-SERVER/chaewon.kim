@@ -15,6 +15,13 @@ public class DiaryEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @Column(nullable = false)
+    private boolean isPublic;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private SoptMember soptMember;
@@ -22,9 +29,12 @@ public class DiaryEntity extends BaseTimeEntity {
     protected DiaryEntity() {
     }
 
-    public DiaryEntity(final String title, final String content) {
+    public DiaryEntity(String title, String content, Category category, boolean isPublic, SoptMember soptMember) {
         this.title = title;
         this.content = content;
+        this.category = category;
+        this.isPublic = isPublic;
+        this.soptMember = soptMember;
     }
 
     public String getTitle() {
@@ -37,6 +47,18 @@ public class DiaryEntity extends BaseTimeEntity {
 
     public String getContent() {
         return content;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public SoptMember getSoptMember() {
+        return soptMember;
     }
 
     public void updateDiary(String title, String content) {
