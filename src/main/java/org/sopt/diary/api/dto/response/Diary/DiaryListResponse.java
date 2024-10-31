@@ -1,4 +1,4 @@
-package org.sopt.diary.api.dto.response;
+package org.sopt.diary.api.dto.response.Diary;
 
 import org.sopt.diary.domain.DiaryEntity;
 

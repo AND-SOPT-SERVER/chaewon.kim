@@ -1,10 +1,10 @@
-package org.sopt.diary.api.dto.response;
+package org.sopt.diary.api.dto.response.Diary;
 
 import org.sopt.diary.domain.DiaryEntity;
 
 public class DiaryResponse {
-    private long id;
-    private String title;
+    private final long id;
+    private final String title;
 
     public DiaryResponse(long id, String title) {
         this.id = id;

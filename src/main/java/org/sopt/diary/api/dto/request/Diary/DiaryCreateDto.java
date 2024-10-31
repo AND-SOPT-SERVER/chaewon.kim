@@ -1,4 +1,4 @@
-package org.sopt.diary.api.dto.request;
+package org.sopt.diary.api.dto.request.Diary;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

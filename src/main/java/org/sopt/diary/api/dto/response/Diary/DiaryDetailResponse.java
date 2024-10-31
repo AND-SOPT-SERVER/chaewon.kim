@@ -1,14 +1,14 @@
-package org.sopt.diary.api.dto.response;
+package org.sopt.diary.api.dto.response.Diary;
 
 import org.sopt.diary.domain.DiaryEntity;
 
 import java.time.LocalDateTime;
 
 public class DiaryDetailResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private LocalDateTime createdAt;
+    private final Long id;
+    private final String title;
+    private final String content;
+    private final LocalDateTime createdAt;
 
     public DiaryDetailResponse(Long id, String title, String content, LocalDateTime createdAt) {
         this.id = id;

@@ -1,12 +1,12 @@
 package org.sopt.diary.api.service;
 
-import org.sopt.diary.api.dto.request.DiaryCreateDto;
-import org.sopt.diary.api.dto.request.DiaryUpdateDto;
-import org.sopt.diary.api.dto.response.DiaryDetailResponse;
-import org.sopt.diary.api.dto.response.DiaryListResponse;
-import org.sopt.diary.api.dto.response.DiaryResponse;
-import org.sopt.diary.common.exception.ErrorCode;
-import org.sopt.diary.common.exception.NotFoundException;
+import org.sopt.diary.api.dto.request.Diary.DiaryCreateDto;
+import org.sopt.diary.api.dto.request.Diary.DiaryUpdateDto;
+import org.sopt.diary.api.dto.response.Diary.DiaryDetailResponse;
+import org.sopt.diary.api.dto.response.Diary.DiaryListResponse;
+import org.sopt.diary.api.dto.response.Diary.DiaryResponse;
+import org.sopt.diary.common.exception.DiaryErrorCode;
+import org.sopt.diary.common.exception.BusinessException;
 import org.sopt.diary.domain.DiaryEntity;
 import org.sopt.diary.domain.repository.DiaryRepository;
 import org.springframework.stereotype.Component;
@@ -59,7 +59,7 @@ public class DiaryService {
 
     private DiaryEntity findDiaryById(final Long diaryId) {
         return diaryRepository.findById(diaryId).orElseThrow(
-                () -> new NotFoundException(ErrorCode.DIARY_NOT_FOUND)
+                () -> new BusinessException(DiaryErrorCode.DIARY_NOT_FOUND)
         );
     }
 }
