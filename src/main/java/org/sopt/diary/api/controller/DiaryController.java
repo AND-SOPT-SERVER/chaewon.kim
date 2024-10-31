@@ -7,7 +7,8 @@ import org.sopt.diary.api.dto.request.Diary.DiaryCreateDto;
 import org.sopt.diary.api.dto.request.Diary.DiaryUpdateDto;
 import org.sopt.diary.api.dto.response.Diary.DiaryDetailResponse;
 import org.sopt.diary.api.dto.response.Diary.DiaryListResponse;
-import org.sopt.diary.api.dto.response.Diary.DiaryResponse;
+import org.sopt.diary.api.dto.response.Diary.DiaryResponseId;
+import org.sopt.diary.api.dto.response.Diary.MyDiaryListResponse;
 import org.sopt.diary.api.service.DiaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/luckybicky")
 public class DiaryController {
     private final DiaryService diaryService;
+    private static final String MEMBER_ID_HEADER = "Member-Id";
 
     public DiaryController(DiaryService diaryService) {
         this.diaryService = diaryService;
@@ -24,8 +26,8 @@ public class DiaryController {
 
     // 일기 작성
     @PostMapping("/diaries")
-    public ResponseEntity<ResponseDto<DiaryResponse>> createDiary(
-            @RequestHeader("Member-Id") Long memberId,
+    public ResponseEntity<ResponseDto<DiaryResponseId>> createDiary(
+            @RequestHeader(MEMBER_ID_HEADER) final Long memberId,
             @Valid @RequestBody final DiaryCreateDto diaryCreateDto
     ) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -49,10 +51,18 @@ public class DiaryController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success(diaryService.getDiary(diaryId)));
     }
 
-    // 일기 목록 조회
+    // 전체 일기 목록 조회
     @GetMapping("/diaries")
     public ResponseEntity<ResponseDto<DiaryListResponse>> getDiaryList() {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success(diaryService.getDiaryList()));
+    }
+
+    // 내 일기 목록 조회
+    @GetMapping("/diaries/me")
+    public ResponseEntity<ResponseDto<MyDiaryListResponse>> getDiaryDetail(
+            @RequestHeader(MEMBER_ID_HEADER) final Long memberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success(diaryService.getMyDiaryList(memberId)));
     }
 
     // 일기 수정

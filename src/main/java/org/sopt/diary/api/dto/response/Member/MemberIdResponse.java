@@ -2,15 +2,14 @@ package org.sopt.diary.api.dto.response.Member;
 
 import org.sopt.diary.domain.SoptMember;
 
-//Long, long
 public class MemberIdResponse {
-    private final Long id;
+    private final long id;
 
-    public MemberIdResponse(Long id) {
+    public MemberIdResponse(long id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

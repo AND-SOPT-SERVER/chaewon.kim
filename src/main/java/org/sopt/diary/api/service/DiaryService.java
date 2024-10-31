@@ -2,7 +2,8 @@ package org.sopt.diary.api.service;
 
 import org.sopt.diary.api.dto.response.Diary.DiaryDetailResponse;
 import org.sopt.diary.api.dto.response.Diary.DiaryListResponse;
-import org.sopt.diary.api.dto.response.Diary.DiaryResponse;
+import org.sopt.diary.api.dto.response.Diary.DiaryResponseId;
+import org.sopt.diary.api.dto.response.Diary.MyDiaryListResponse;
 import org.sopt.diary.common.exception.DiaryErrorCode;
 import org.sopt.diary.common.exception.BusinessException;
 import org.sopt.diary.domain.Category;
@@ -26,10 +27,10 @@ public class DiaryService {
 
     // 일기 작성
     @Transactional
-    public DiaryResponse createDiary(final Long memberId, final String title, final String content, final String category, final boolean isPublic) {
+    public DiaryResponseId createDiary(final Long memberId, final String title, final String content, final String category, final boolean isPublic) {
         SoptMember member = memberService.findById(memberId);
         DiaryEntity diaryEntity = new DiaryEntity(title, content, Category.fromName(category), isPublic, member);
-        return DiaryResponse.from(diaryRepository.save(diaryEntity));
+        return DiaryResponseId.from(diaryRepository.save(diaryEntity));
     }
 
     // 일기 상세 조회
@@ -44,6 +45,14 @@ public class DiaryService {
     public DiaryListResponse getDiaryList() {
         List<DiaryEntity> diaryEntities = diaryRepository.findTop10ByOrderByCreatedAtDesc();
         return DiaryListResponse.from(diaryEntities);
+    }
+
+    // 내 일기 목록 조회
+    @Transactional(readOnly = true)
+    public MyDiaryListResponse getMyDiaryList(final Long memberId) {
+        SoptMember member = memberService.findById(memberId);
+        List<DiaryEntity> diaryEntities = diaryRepository.findTop10BySoptMemberIdOrderByCreatedAtDesc(memberId);
+        return MyDiaryListResponse.from(diaryEntities);
     }
 
     // 일기 수정
@@ -61,7 +70,7 @@ public class DiaryService {
     }
 
     private DiaryEntity findDiaryById(final Long diaryId) {
-        return diaryRepository.findById(diaryId).orElseThrow(
+        return diaryRepository.findByIdWithMember(diaryId).orElseThrow(
                 () -> new BusinessException(DiaryErrorCode.DIARY_NOT_FOUND)
         );
     }

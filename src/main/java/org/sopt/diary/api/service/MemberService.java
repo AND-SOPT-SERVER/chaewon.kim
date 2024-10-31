@@ -47,6 +47,11 @@ public class MemberService {
         }
     }
 
+    public SoptMember findById(final Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
     private SoptMember findMemberByUsername(final String username) {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(MemberErrorCode.MEMBER_NOT_FOUND));

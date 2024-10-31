@@ -8,6 +8,7 @@ import org.sopt.diary.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -30,6 +31,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ResponseDto.validFail(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage()));
+    }
+
+    @ExceptionHandler(value = {MissingRequestHeaderException.class})
+    public ResponseEntity<ResponseDto<BusinessErrorCode>> handleMissingHeaderException(MissingRequestHeaderException e) {
+        return ResponseEntity
+                .status(BusinessErrorCode.MISSING_REQUIRED_HEADER.getHttpStatus())
+                .body(ResponseDto.fail(BusinessErrorCode.MISSING_REQUIRED_HEADER));
     }
 
     @ExceptionHandler(value = {Exception.class})
