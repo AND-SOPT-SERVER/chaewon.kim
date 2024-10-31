@@ -3,6 +3,8 @@ package org.sopt.diary.common.exception;
 import org.springframework.http.HttpStatus;
 
 public enum DiaryErrorCode implements DefaultErrorCode {
+    //403 FORBIDDEN
+    DIARY_FORBIDDEN(HttpStatus.FORBIDDEN,40320,"비공개 일기에 접근할 수 없습니다."),
     //404 NOT_FOUND
     DIARY_NOT_FOUND(HttpStatus.NOT_FOUND,40420,"해당 다이어리를 찾을 수 없습니다."),
     ;

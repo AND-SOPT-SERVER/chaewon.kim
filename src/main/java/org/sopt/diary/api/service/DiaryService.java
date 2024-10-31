@@ -37,13 +37,16 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public DiaryDetailResponse getDiary(final Long diaryId) {
         DiaryEntity diaryEntity = findDiaryById(diaryId);
+        if (!diaryEntity.isPublic()) {
+            throw new BusinessException(DiaryErrorCode.DIARY_FORBIDDEN);
+        }
         return DiaryDetailResponse.from(diaryEntity);
     }
 
     // 일기 목록 조회
     @Transactional(readOnly = true)
     public DiaryListResponse getDiaryList() {
-        List<DiaryEntity> diaryEntities = diaryRepository.findTop10ByOrderByCreatedAtDesc();
+        List<DiaryEntity> diaryEntities = diaryRepository.findTop10ByIsPublicTrueOrderByCreatedAtDesc();
         return DiaryListResponse.from(diaryEntities);
     }
 
@@ -51,7 +54,7 @@ public class DiaryService {
     @Transactional(readOnly = true)
     public MyDiaryListResponse getMyDiaryList(final Long memberId) {
         SoptMember member = memberService.findById(memberId);
-        List<DiaryEntity> diaryEntities = diaryRepository.findTop10BySoptMemberIdOrderByCreatedAtDesc(memberId);
+        List<DiaryEntity> diaryEntities = diaryRepository.findTop10BySoptMemberIdAndIsPublicTrueOrderByCreatedAtDesc(memberId);
         return MyDiaryListResponse.from(diaryEntities);
     }
 
