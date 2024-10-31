@@ -10,23 +10,23 @@ public class SoptMember extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String nickname;
+    private String username;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private String name;
+    private String nickname;
 
     @Column(nullable = false)
     private int age;
 
     protected SoptMember() {};
 
-    public SoptMember(String nickname, String password, String name, int age) {
-        this.nickname = nickname;
+    public SoptMember(String username, String password, String nickname, int age) {
+        this.username = username;
         this.password = password;
-        this.name = name;
+        this.nickname = nickname;
         this.age = age;
     }
 
@@ -34,12 +34,16 @@ public class SoptMember extends BaseTimeEntity {
         return id;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getUsername() {
+        return username;
     }
 
-    public String getName() {
-        return name;
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     public int getAge() {
