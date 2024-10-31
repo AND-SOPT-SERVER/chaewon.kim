@@ -1,6 +1,6 @@
 package org.sopt.diary.api.dto;
 
-import org.sopt.diary.common.exception.ErrorCode;
+import org.sopt.diary.common.exception.DefaultErrorCode;
 import org.springframework.http.HttpStatus;
 
 public class ResponseDto<T> {
@@ -23,7 +23,7 @@ public class ResponseDto<T> {
         return new ResponseDto<T>(true, data, null);
     }
 
-    public static <T> ResponseDto<T> fail(ErrorCode errorCode) {
+    public static <T> ResponseDto<T> fail(DefaultErrorCode errorCode) {
         return new ResponseDto<T>(false, null, ErrorDto.of(errorCode.getCode(), errorCode.getMessage()));
     }
 
