@@ -10,9 +10,15 @@ import org.sopt.diary.domain.Category;
 import org.sopt.diary.domain.DiaryEntity;
 import org.sopt.diary.domain.SoptMember;
 import org.sopt.diary.domain.repository.DiaryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -45,16 +51,45 @@ public class DiaryService {
 
     // 일기 목록 조회
     @Transactional(readOnly = true)
-    public DiaryListResponse getDiaryList() {
-        List<DiaryEntity> diaryEntities = diaryRepository.findTop10ByIsPublicTrueOrderByCreatedAtDesc();
+    public DiaryListResponse getDiaryList(
+            final Category category,
+            final String sortBy,
+            Pageable pageable
+    ) {
+        Specification<DiaryEntity> specification = DiarySpecification.withCategoryAndIsPublic(category);
+
+        if (sortBy.equals("createdAt"))  {
+            specification = specification.and(DiarySpecification.orderByCreatedAt());
+        } else if (sortBy.equals("contentLength"))  {
+            specification = specification.and(DiarySpecification.orderByContentLength());
+        }
+
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+
+        Page<DiaryEntity> diaryEntities = diaryRepository.findAll(specification, pageable);
         return DiaryListResponse.from(diaryEntities);
     }
 
     // 내 일기 목록 조회
     @Transactional(readOnly = true)
-    public MyDiaryListResponse getMyDiaryList(final Long memberId) {
-        SoptMember member = memberService.findById(memberId);
-        List<DiaryEntity> diaryEntities = diaryRepository.findTop10BySoptMemberIdAndIsPublicTrueOrderByCreatedAtDesc(memberId);
+    public MyDiaryListResponse getMyDiaryList(
+            final Long memberId,
+            final Category category,
+            final String sortBy,
+            Pageable pageable
+    ) {
+        List<Sort.Order> sorts = new ArrayList<>();
+
+        if (sortBy.equals("createdAt"))  {
+            sorts.add(Sort.Order.desc("createdAt"));
+        } else if (sortBy.equals("contentLength"))  {
+            sorts.add(Sort.Order.desc("contentLength"));
+        }
+
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(sorts));
+
+        memberService.findById(memberId);
+        Page<DiaryEntity> diaryEntities = diaryRepository.findByMemberIdAndCategory(memberId, category, pageable);
         return MyDiaryListResponse.from(diaryEntities);
     }
 

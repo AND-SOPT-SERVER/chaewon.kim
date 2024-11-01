@@ -1,6 +1,7 @@
 package org.sopt.diary.api.dto.response.Diary;
 
 import org.sopt.diary.domain.DiaryEntity;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +17,7 @@ public class MyDiaryListResponse {
         return diaries;
     }
 
-    public static MyDiaryListResponse from(List<DiaryEntity> diaryEntities) {
+    public static MyDiaryListResponse from(Page<DiaryEntity> diaryEntities) {
         return new MyDiaryListResponse(
                 diaryEntities.stream()
                         .map(MyDiaryDetailResponse::from)

@@ -1,6 +1,7 @@
 package org.sopt.diary.api.dto.response.Diary;
 
 import org.sopt.diary.domain.DiaryEntity;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -15,10 +16,10 @@ public class DiaryListResponse {
         return diaries;
     }
 
-    public static DiaryListResponse from(List<DiaryEntity> diaryEntities) {
+    public static DiaryListResponse from(Page<DiaryEntity> diaryEntities) {
         return new DiaryListResponse(
                 diaryEntities.stream()
-                        .map(diaryEntity -> DiaryResponse.from(diaryEntity))
+                        .map(DiaryResponse::from)
                         .toList()
         );
     }

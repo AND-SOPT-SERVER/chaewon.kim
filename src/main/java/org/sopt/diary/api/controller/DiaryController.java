@@ -10,6 +10,10 @@ import org.sopt.diary.api.dto.response.Diary.DiaryListResponse;
 import org.sopt.diary.api.dto.response.Diary.DiaryResponseId;
 import org.sopt.diary.api.dto.response.Diary.MyDiaryListResponse;
 import org.sopt.diary.api.service.DiaryService;
+import org.sopt.diary.domain.Category;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,16 +57,25 @@ public class DiaryController {
 
     // 전체 일기 목록 조회
     @GetMapping("/diaries")
-    public ResponseEntity<ResponseDto<DiaryListResponse>> getDiaryList() {
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success(diaryService.getDiaryList()));
+    public ResponseEntity<ResponseDto<DiaryListResponse>> getDiaryList(
+            @RequestParam(required = false) final Category category,
+            @RequestParam(required = false) final String sortBy,
+            @PageableDefault(page = 0, size = 10) Pageable pageable
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.success(diaryService.getDiaryList(category, sortBy, pageable)));
     }
 
     // 내 일기 목록 조회
     @GetMapping("/diaries/me")
     public ResponseEntity<ResponseDto<MyDiaryListResponse>> getDiaryDetail(
-            @RequestHeader(MEMBER_ID_HEADER) final Long memberId
+            @RequestHeader(MEMBER_ID_HEADER) final Long memberId,
+            @RequestParam(required = false) final Category category,
+            @RequestParam(required = false) final String sortBy,
+            @PageableDefault(page = 0, size = 10) Pageable pageable
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.success(diaryService.getMyDiaryList(memberId)));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ResponseDto.success(diaryService.getMyDiaryList(memberId, category, sortBy, pageable)));
     }
 
     // 일기 수정
