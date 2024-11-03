@@ -13,16 +13,16 @@ import org.sopt.diary.domain.repository.DiaryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class DiaryService {
+
+    public static final String CREATED_AT = "createdAt";
+    public static final String CONTENT_LENGTH = "contentLength";
+
     private final DiaryRepository diaryRepository;
     private final MemberService memberService;
 
@@ -56,14 +56,7 @@ public class DiaryService {
             final String sortBy,
             Pageable pageable
     ) {
-        Specification<DiaryEntity> specification = DiarySpecification.withCategoryAndIsPublic(category);
-
-        if (sortBy.equals("createdAt"))  {
-            specification = specification.and(DiarySpecification.orderByCreatedAt());
-        } else if (sortBy.equals("contentLength"))  {
-            specification = specification.and(DiarySpecification.orderByContentLength());
-        }
-
+        Specification<DiaryEntity> specification = createSpecificationWithSorting(category, null, sortBy);
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 
         Page<DiaryEntity> diaryEntities = diaryRepository.findAll(specification, pageable);
@@ -78,18 +71,11 @@ public class DiaryService {
             final String sortBy,
             Pageable pageable
     ) {
-        List<Sort.Order> sorts = new ArrayList<>();
-
-        if (sortBy.equals("createdAt"))  {
-            sorts.add(Sort.Order.desc("createdAt"));
-        } else if (sortBy.equals("contentLength"))  {
-            sorts.add(Sort.Order.desc("contentLength"));
-        }
-
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(sorts));
+        Specification<DiaryEntity> specification = createSpecificationWithSorting(category, memberId, sortBy);
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 
         memberService.findById(memberId);
-        Page<DiaryEntity> diaryEntities = diaryRepository.findByMemberIdAndCategory(memberId, category, pageable);
+        Page<DiaryEntity> diaryEntities = diaryRepository.findAll(specification, pageable);
         return MyDiaryListResponse.from(diaryEntities);
     }
 
@@ -111,5 +97,24 @@ public class DiaryService {
         return diaryRepository.findByIdWithMember(diaryId).orElseThrow(
                 () -> new BusinessException(DiaryErrorCode.DIARY_NOT_FOUND)
         );
+    }
+
+    private Specification<DiaryEntity> createSpecificationWithSorting(Category category, Long memberId, String sortBy) {
+        Specification<DiaryEntity> specification;
+
+        if (memberId != null) {
+            specification = DiarySpecification.withMemberIdAndCategory(memberId, category);
+        } else {
+            specification = DiarySpecification.withCategoryAndIsPublic(category);
+        }
+
+        // 정렬 조건 추가
+        if (CREATED_AT.equals(sortBy)) {
+            specification = specification.and(DiarySpecification.orderByCreatedAt());
+        } else if (CONTENT_LENGTH.equals(sortBy)) {
+            specification = specification.and(DiarySpecification.orderByContentLength());
+        }
+
+        return specification;
     }
 }
