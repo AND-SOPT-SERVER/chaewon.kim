@@ -2,36 +2,39 @@ package org.sopt.diary.domain;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-
 @Entity
-public class DiaryEntity {
+public class DiaryEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    public String title;
+    private String title;
 
     @Column(nullable = false)
-    public String content;
+    private String content;
 
-    @Column
-    public LocalDateTime createdAt;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
-    @Column
-    public LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private boolean isPublic;
 
-    public DiaryEntity() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private SoptMember soptMember;
 
+    protected DiaryEntity() {
     }
 
-    public DiaryEntity(final String title, final String content) {
+    public DiaryEntity(String title, String content, Category category, boolean isPublic, SoptMember soptMember) {
         this.title = title;
         this.content = content;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = null;
+        this.category = category;
+        this.isPublic = isPublic;
+        this.soptMember = soptMember;
     }
 
     public String getTitle() {
@@ -46,13 +49,20 @@ public class DiaryEntity {
         return content;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Category getCategory() {
+        return category;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public SoptMember getSoptMember() {
+        return soptMember;
     }
 
     public void updateDiary(String title, String content) {
         this.title = title;
         this.content = content;
-        this.updatedAt = LocalDateTime.now();
     }
 }
